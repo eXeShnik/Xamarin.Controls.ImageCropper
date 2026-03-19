@@ -1,4 +1,4 @@
-﻿using Bind_TOCropViewController;
+using Bind_TOCropViewController;
 
 using CoreGraphics;
 
@@ -25,7 +25,7 @@ public partial class ImageCropperImplementation
         try
         {
             var image = UIImage.FromFile(imageFilePath)
-                ?? throw new FileNotFoundException("Unable to load image.", imageFilePath);
+                        ?? throw new FileNotFoundException("Unable to load image.", imageFilePath);
 
             var cropViewController = settings.CropShape == CropSettings.CropShapeType.Oval
                 ? new TOCropViewController(TOCropViewCroppingStyle.Circular, image)
@@ -42,13 +42,17 @@ public partial class ImageCropperImplementation
             if (!string.IsNullOrWhiteSpace(settings.DoneButtonTitle))
                 cropViewController.DoneButtonTitle = settings.DoneButtonTitle;
 
-            if (settings.AspectRatioX > 0 && settings.AspectRatioY > 0)
+            if (settings is { AspectRatioX: > 0, AspectRatioY: > 0 })
             {
+#if NET10_0_OR_GREATER
+                cropViewController.AspectRatioPreset = new CGSize(settings.AspectRatioX, settings.AspectRatioY);
+#else
                 cropViewController.AspectRatioPreset =
                     TOCropViewControllerAspectRatioPreset.Custom;
 
                 cropViewController.CustomAspectRatio =
                     new CGSize(settings.AspectRatioX, settings.AspectRatioY);
+#endif
 
                 cropViewController.ResetAspectRatioEnabled = false;
                 cropViewController.AspectRatioLockEnabled = true;
@@ -57,7 +61,7 @@ public partial class ImageCropperImplementation
             var navController = new UINavigationController(cropViewController);
 
             var topVC = Platform.GetCurrentUIViewController()
-                ?? throw new InvalidOperationException("Unable to get current UIViewController.");
+                        ?? throw new InvalidOperationException("Unable to get current UIViewController.");
 
             topVC.PresentViewController(navController, true, null);
         }
