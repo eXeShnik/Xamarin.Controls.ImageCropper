@@ -53,11 +53,11 @@
         <PackageReference Include="Com.Vanniktech.AndroidImageCropper.Maui" Version="4.6.0"/>
     </ItemGroup>
 
-    <ItemGroup Condition="$(TargetFramework.Contains('net8.0-ios')) or $(TargetFramework.Contains('net9.0-ios'))">
+    <ItemGroup Condition="$(TargetFramework.Contains('net9.0-ios'))">
         <PackageReference Include="TOCropView.Maui" Version="2.6.1.9"/>
     </ItemGroup>
 
-    <ItemGroup Condition="$(TargetFramework.Contains('net10.0-ios'))">
+    <ItemGroup Condition="!$(TargetFramework.Contains('net9.0')) and $(TargetFramework.Contains('ios'))">
         <PackageReference Include="TOCropView.Maui.V2" Version="2.6.1.9"/>
     </ItemGroup>
 
